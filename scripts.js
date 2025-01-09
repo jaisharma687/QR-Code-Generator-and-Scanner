@@ -1,4 +1,3 @@
-// Prevent default behavior on drag & drop events
 const dropZone = document.querySelector('.drop-zone');
 const qrFile = document.getElementById('qr-file');
 
@@ -11,7 +10,6 @@ function preventDefaults(e) {
   e.stopPropagation();
 }
 
-// Add or remove styles when dragging over the drop zone
 ['dragenter', 'dragover'].forEach(eventName => {
   dropZone.addEventListener(eventName, highlight, false);
 });
@@ -28,7 +26,6 @@ function unhighlight() {
   dropZone.classList.remove('dragover');
 }
 
-// Handle files dropped in the drop zone
 dropZone.addEventListener('drop', handleDrop, false);
 
 function handleDrop(e) {
@@ -38,9 +35,20 @@ function handleDrop(e) {
   handleFile(file);
 }
 
-// Handle file input when browsing files
 qrFile.addEventListener('change', function () {
   handleFile(this.files[0]);
+});
+
+document.getElementById('qr-input').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    document.getElementById('generate-btn').click();
+  }
+});
+
+qrFile.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    qrFile.click();
+  }
 });
 
 function handleFile(file) {
@@ -51,7 +59,6 @@ function handleFile(file) {
   }
 }
 
-// Generate QR Code
 document.getElementById('generate-btn').addEventListener('click', function () {
   const qrInput = document.getElementById('qr-input').value.trim();
   const qrSize = document.getElementById('qr-size').value;
@@ -82,7 +89,6 @@ document.getElementById('generate-btn').addEventListener('click', function () {
   }
 });
 
-// Process QR Code image to extract text
 function processQRCode(file) {
   const reader = new FileReader();
   reader.onload = function () {
@@ -109,22 +115,18 @@ function processQRCode(file) {
   reader.readAsDataURL(file);
 }
 
-// Tab switching functionality
 function openTab(evt, tabName) {
   const tabContents = document.querySelectorAll('.tab-content');
   const tabLinks = document.querySelectorAll('.tab-link');
   const previewSection = document.getElementById('preview-section');
   const resultSection = document.getElementById('result-section');
 
-  // Hide all tab contents and reset buttons
   tabContents.forEach(content => content.classList.add('hidden'));
   tabLinks.forEach(link => link.classList.remove('active', 'bg-indigo-600', 'bg-pink-600'));
 
-  // Show the selected tab
   document.getElementById(tabName).classList.remove('hidden');
   evt.currentTarget.classList.add('active');
 
-  // Switch between preview and result sections
   if (tabName === 'scanner') {
     previewSection.classList.add('hidden');
     resultSection.classList.remove('hidden');
@@ -134,20 +136,17 @@ function openTab(evt, tabName) {
   }
 }
 
-// Reset QR Code Generator
 document.getElementById('reset-btn').addEventListener('click', function () {
-  document.getElementById('qr-input').value = ''; // Clear input field
-  document.getElementById('qr-size').value = '256'; // Reset size to default
+  document.getElementById('qr-input').value = '';
+  document.getElementById('qr-size').value = '256';
   const qrCodeDiv = document.getElementById('qr-code-preview');
-  qrCodeDiv.innerHTML = ''; // Clear QR code preview
-  document.getElementById('download-btn').classList.add('hidden'); // Hide download button
+  qrCodeDiv.innerHTML = '';
+  document.getElementById('download-btn').classList.add('hidden');
 });
 
-// Reset Scanner
 document.getElementById('scanner-reset-btn').addEventListener('click', function () {
-  qrFile.value = ''; // Clear the file input
-  document.getElementById('qr-result').textContent = ''; // Clear the result
+  qrFile.value = '';
+  document.getElementById('qr-result').textContent = '';
 });
 
-// Initialize default tab
 document.querySelector('.tab-link').classList.add('active', 'bg-indigo-600');
